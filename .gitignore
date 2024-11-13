@@ -46,3 +46,10 @@
 
 # VScode stuff
 .vscode/
+
+
+# Binary files
+bin/
+
+# Output files
+ex1/
