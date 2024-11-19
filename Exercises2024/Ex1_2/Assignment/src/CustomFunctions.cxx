@@ -1,16 +1,22 @@
 #include "CustomFunctions.h"
 
+
+//String constants for file paths
 const std::string OUTPUT_DIR = "/workspaces/SUPA_CPP_Labs/Exercises2024/Ex1_2/Outputs/ex1/";
 const std::string INPUT_FILE = "/workspaces/SUPA_CPP_Labs/Exercises2024/Ex1_2/input2D_float.txt";
 const std::string INPUT_ERR_FILE = "/workspaces/SUPA_CPP_Labs/Exercises2024/Ex1_2/error2D_float.txt";
 
-
-InputData readData(std::string filename) {
+/**
+ * Reads data from a file and returns it as a struct containing two vectors of floats
+ * 
+ * @param filename The path of the file to read from
+ */
+InputData readData(std::string filePath) {
     
-    std::cout << "Reading data from file: " << filename << std::endl;
-    std::ifstream input_file(filename);
+    std::cout << "Reading data from file: " << filePath << std::endl;
+    std::ifstream inputFile(filePath);
 
-    if (!input_file.is_open()) {
+    if (!inputFile.is_open()) {
         throw std::runtime_error("Could not open file");
     }
 
@@ -18,21 +24,29 @@ InputData readData(std::string filename) {
     std::vector<float> xValues = {};
     std::vector<float> yValues = {};
     int lineCount = 0;
-    while (std::getline(input_file, line)) {
+
+    while (std::getline(inputFile, line)) {
         if (lineCount == 0) {
             lineCount++;
             continue;
         }
 
         float x, y;
-        sscanf(line.c_str(), "%f,%f", &x, &y); // c_str returns ptr to array of characters ending in null rather than a string
+        // c_str() returns ptr to null terminated array of characters for handling by sscanf()
+        sscanf(line.c_str(), "%f,%f", &x, &y); 
         lineCount++;
         xValues.push_back(x);
         yValues.push_back(y);
     }
-    input_file.close();
+    inputFile.close();
     return {xValues, yValues};
 }
+
+/**
+ * Prompts the user to select an option from a list of options
+ * 
+ * @return The selected option as an integer
+ */
 
 int getOption() {
 
@@ -85,6 +99,13 @@ int getOption() {
     return 0;
 }
 
+/**
+ * Calculates the magnitudes of the x and y values in the input data
+ * using the formula sqrt(x^2 + y^2)
+ * 
+ * @param data The input data
+ * @return A vector of floats containing the magnitudes
+ */
 std::vector<float> getMagnitudes(InputData data) {
 
 
@@ -98,6 +119,13 @@ std::vector<float> getMagnitudes(InputData data) {
     return magnitudes;
 }
 
+/**
+ * Prompts the user to enter the number of lines to print
+ * 
+ * @param nDefault The default number of lines to print
+ * @param max The maximum number of lines that can be printed
+ * @return The number of lines to print
+ */
 static int getNLines(int nDefault, int max) {
 
     int nLines = nDefault;
@@ -116,6 +144,11 @@ static int getNLines(int nDefault, int max) {
     return nLines;
 }
 
+/**
+ * Prints the x and y values from the input data
+ * 
+ * @param data The input data
+ */
 int printData(InputData data) {
 
     int nLines = getNLines(5, data.xValues.size());
@@ -130,6 +163,11 @@ int printData(InputData data) {
     return 0;
 }
 
+/**
+ * Prints a vector of floats
+ * 
+ * @param data The vector of floats to print
+ */
 int printData(std::vector<float> data) {
     int nLines =  getNLines(5, data.size());
 
@@ -144,6 +182,15 @@ int printData(std::vector<float> data) {
     return 0;
 }
 
+/**
+ * Calculates the chi squared value for a given gradient and intercept
+ * 
+ * @param data The input data
+ * @param expectedErrData The expected error data
+ * @param gradient The gradient of the fit line
+ * @param intercept The intercept of the fit line
+ * @return The chi squared value
+ */
 static float calcChi2(InputData data, InputData expectedErrData, float gradient, float intercept) {
     if (data.xValues.size() != expectedErrData.xValues.size()) {
         throw std::runtime_error("Data and expected error data have different sizes");
@@ -164,7 +211,13 @@ static float calcChi2(InputData data, InputData expectedErrData, float gradient,
     return chi2;
 }
 
-
+/**
+ * Calculates the gradient and intercept of a fit line for the input data
+ * 
+ * @param data The input data
+ * @param expectedErrFilename The path of the file containing the expected error data
+ * @return A FitLine struct containing the gradient, intercept and chi squared value
+ */
 FitLine calcFitLine(InputData data, std::string expectedErrFilename) {
 
     InputData errData;
@@ -189,6 +242,12 @@ FitLine calcFitLine(InputData data, std::string expectedErrFilename) {
     return {gradient, intercept, chi2};
 }
 
+/**
+ * Saves the gradient, intercept and chi squared value of a fit line to a file
+ * 
+ * @param fitLine The fit line to save
+ * @param filename The path of the file to save to
+ */
 int save(FitLine fitLine, std::string filename) {
     std::string filepath = OUTPUT_DIR + filename;
     std::ofstream output_file(filepath);
@@ -201,7 +260,12 @@ int save(FitLine fitLine, std::string filename) {
     output_file.close();
     return 0;
 }
-
+/**
+ * Saves a vector of floats to a file
+ * 
+ * @param data The vector of floats to save
+ * @param filename The path of the file to save to
+ */
 int save(std::vector<float> data, std::string filename) {
     std::string filepath = OUTPUT_DIR + filename;
     std::ofstream output_file(filepath);
@@ -215,6 +279,12 @@ int save(std::vector<float> data, std::string filename) {
     output_file.close();
     return 0;
 }
+/** 
+ * Saves the x and y values from the input data to a file
+ * 
+ * @param data The input data
+ * @param filename The path of the file to save to
+ */
 
 int save(InputData data, std::string filename) {
     std::string filepath = OUTPUT_DIR + filename;
@@ -231,7 +301,17 @@ int save(InputData data, std::string filename) {
     return 0;
 }
 
-
+/**
+ * Calculates x to the power of y for a given x and y value and stores the result in a pointer
+ * If y is 0, the function returns without changing the result.
+ * The function is recursive and calls itself with y decremented by 1 until y is 0.
+ * 
+ * @param result A pointer to the result of x^y (passed by reference) (Should be initialised to 1)
+ * @param x The base value
+ * @param yRounded The exponent value (must be rounded to the nearest integer)
+ * 
+ * 
+ */
 static void calcXtoY(float* result, float x, int yRounded) {
     
     if (yRounded == 0) {
@@ -241,13 +321,21 @@ static void calcXtoY(float* result, float x, int yRounded) {
         calcXtoY(result, x, yRounded - 1);
     }
 }
+/**
+ * Calculates x to the power of y for each pair of x and y values in the input data
+ * 
+ * @param data The input data
+ * @return A vector of floats containing the results of x^y
+ */
 
 std::vector<float> xToY(InputData data) {
     std::vector<float> results = {};
     for (int i = 0; i < data.xValues.size(); i++) {
         float x = data.xValues[i];
+        
         int y = std::round(data.yValues[i]);
         float result = 1;
+
         calcXtoY(&result, x, y);
         results.push_back(result);
     }
@@ -255,6 +343,3 @@ std::vector<float> xToY(InputData data) {
     return results;
 
 }
-
-
-
