@@ -53,3 +53,8 @@ bin/
 
 # Output files
 ex1/
+
+# Documentation
+doc/
+
+doc.conf
