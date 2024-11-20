@@ -1,5 +1,10 @@
 #include "CustomFunctions.h"
 
+/**
+ * * Main function to run the program
+ *  Reads data from a file, and allows the user to select from a list of options
+ */
+
 int main(int argc, char* argv[]) {
 
     std::string input_file = INPUT_FILE;
