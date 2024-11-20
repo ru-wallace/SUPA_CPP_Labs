@@ -6,22 +6,27 @@
 
 #pragma once
 
-extern const std::string OUTPUT_DIR;
-extern const std::string INPUT_FILE;
-extern const std::string INPUT_ERR_FILE;
+extern const std::string OUTPUT_DIR; //!< The directory to save output files to
+extern const std::string INPUT_FILE; //!< The path of the file to read input data from
+extern const std::string INPUT_ERR_FILE; //!< The path of the file to read expected error data from
 
 
-
+/**
+ * Struct containing two vectors of floats representing x and y values
+ */
 struct InputData {
-    std::vector<float> xValues;
-    std::vector<float> yValues;
+
+    std::vector<float> xValues; //!< Vector of floats representing x values
+    std::vector<float> yValues; //!< Vector of floats representing y values
 };
 
-// gradient and intercept are p and q respectively in the equation y = px + q
+/**
+ * Struct containing the gradient, intercept, and Chi^2 value of a linear fit line
+ */
 struct FitLine { 
-    float gradient; 
-    float intercept;
-    float chi2;
+    float gradient; //!< The gradient of the fit line
+    float intercept; //!< The intercept of the fit line
+    float chi2; //!< The chi squared value of the fit line
 };
 
 /**
