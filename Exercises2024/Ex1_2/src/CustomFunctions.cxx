@@ -140,7 +140,7 @@ int printData(InputData data) {
     }
     std::cout << std::endl << "Press enter to continue...";
     std::cin.ignore();
-    std::cout << "\r" << std::string(100, '*') << std::endl << std::endl;
+    std::cout << "\r" << std::string(100, '*') << "\n" << std::endl;
 
     return 0;
 }
@@ -153,7 +153,7 @@ int printData(std::vector<float> data) {
         std::cout << i << " | " << data[i] << std::endl;
     }
 
-    std::cout << std::endl << "Press enter to continue..." << std::endl << std::endl;
+    std::cout << std::endl << "Press enter to continue..." << "\n" << std::endl;
     std::cin.ignore();
 
 

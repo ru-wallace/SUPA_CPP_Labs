@@ -35,10 +35,10 @@ int main(int argc, char* argv[]) {
         case 3:
             fitLine = calcFitLine(data, INPUT_ERR_FILE);
             std::cout << "y=" << fitLine.gradient << "x+" << fitLine.intercept << std::endl;
-            std::cout << "Chi2/NDF: " << fitLine.chi2/2 << std::endl << std::endl;
+            std::cout << "Chi2/NDF: " << fitLine.chi2/2 << "\n" << std::endl;
             save(fitLine, "fitLine.txt");
             savedFit = 1;
-            std::cout << "Press enter to continue" << std::endl << std::endl;
+            std::cout << "Press enter to continue" << "\n" << std::endl;
             std::cin.ignore();
             
             break;
